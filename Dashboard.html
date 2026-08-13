@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Gestão de Máquinas</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #14233c;
+        }
+
+        /* =========================
+           ESTRUTURA
+        ========================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           MENU LATERAL
+        ========================= */
+
+        .sidebar {
+            width: 270px;
+            min-height: 100vh;
+            background: #071c35;
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 30px 14px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 0 10px;
+            margin-bottom: 45px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+
+            background: white;
+            color: #071c35;
+
+            border-radius: 8px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 23px;
+        }
+
+        .logo h2 {
+            font-size: 18px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .menu a {
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 0 15px;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #12375f;
+        }
+
+        .menu a.active {
+            background: #0868ed;
+        }
+
+        .icon {
+            width: 25px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        /* =========================
+           ÁREA PRINCIPAL
+        ========================= */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* =========================
+           TOPO
+        ========================= */
+
+        .topbar {
+            height: 75px;
+
+            background: white;
+
+            border-bottom: 1px solid #e1e5eb;
+
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            gap: 25px;
+
+            padding: 0 28px;
+        }
+
+        .notification {
+            position: relative;
+            font-size: 24px;
+        }
+
+        .notification-number {
+            position: absolute;
+
+            top: -7px;
+            right: -7px;
+
+            width: 19px;
+            height: 19px;
+
+            border-radius: 50%;
+
+            background: #0868ed;
+
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 11px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile img {
+            width: 43px;
+            height: 43px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+        }
+
+        /* =========================
+           CONTEÚDO
+        ========================= */
+
+        .content {
+            padding: 30px 27px;
+            flex: 1;
+        }
+
+        .welcome {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            font-size: 25px;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #667085;
+            font-size: 15px;
+        }
+
+        .date {
+            height: 45px;
+
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 7px;
+
+            padding: 0 15px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            color: #45546b;
+        }
+
+        /* =========================
+           CARDS INDICADORES
+        ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 8px;
+
+            padding: 18px;
+
+            min-height: 165px;
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .card-icon {
+            width: 55px;
+            height: 55px;
+
+            border-radius: 12px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 25px;
+        }
+
+        .blue {
+            background: #e3efff;
+            color: #0868ed;
+        }
+
+        .green {
+            background: #def8e5;
+            color: #18a94b;
+        }
+
+        .yellow {
+            background: #fff1d2;
+            color: #efa900;
+        }
+
+        .red {
+            background: #ffe2e2;
+            color: #e33131;
+        }
+
+        .card-title {
+            color: #45546b;
+            font-size: 14px;
+        }
+
+        .card-number {
+            font-size: 32px;
+            font-weight: bold;
+
+            margin-top: 5px;
+        }
+
+        .card-description {
+            margin-top: 10px;
+
+            color: #667085;
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           GRÁFICOS
+        ========================= */
+
+        .charts {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+        }
+
+        .chart-card {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 8px;
+
+            padding: 20px;
+
+            min-height: 335px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           GRÁFICO DONUT
+        ========================= */
+
+        .donut-area {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 35px;
+        }
+
+        .donut {
+            width: 190px;
+            height: 190px;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(
+                    #18b951 0% 64.3%,
+                    #ffb515 64.3% 85.7%,
+                    #e83232 85.7% 100%
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut::after {
+            content: "";
+
+            width: 115px;
+            height: 115px;
+
+            background: white;
+
+            border-radius: 50%;
+        }
+
+        .donut-center {
+            position: absolute;
+
+            text-align: center;
+        }
+
+        .donut-center strong {
+            display: block;
+            font-size: 28px;
+        }
+
+        .donut-center span {
+            color: #667085;
+            font-size: 13px;
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .legend-item {
+            display: grid;
+
+            grid-template-columns:
+                12px 130px 30px 60px;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 14px;
+        }
+
+        .legend-dot {
+            width: 11px;
+            height: 11px;
+
+            border-radius: 50%;
+        }
+
+        .dot-green {
+            background: #18b951;
+        }
+
+        .dot-yellow {
+            background: #ffb515;
+        }
+
+        .dot-red {
+            background: #e83232;
+        }
+
+        .green-text {
+            color: #18a94b;
+        }
+
+        .yellow-text {
+            color: #efa900;
+        }
+
+        .red-text {
+            color: #e33131;
+        }
+
+        /* =========================
+           GRÁFICO DE BARRAS
+        ========================= */
+
+        .bar-chart {
+            height: 230px;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: space-around;
+
+            border-bottom: 1px solid #ccd3dd;
+
+            padding: 0 30px;
+        }
+
+        .bar-container {
+            height: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .bar {
+            width: 65px;
+
+            background: #0868ed;
+
+            border-radius: 4px 4px 0 0;
+        }
+
+        .bar-1 {
+            height: 125px;
+        }
+
+        .bar-2 {
+            height: 170px;
+        }
+
+        .bar-3 {
+            height: 135px;
+        }
+
+        .bar-label {
+            font-size: 13px;
+            color: #667085;
+        }
+
+        .production-total {
+            margin-top: 20px;
+
+            color: #0868ed;
+
+            font-weight: bold;
+        }
+
+        /* =========================
+           ALERTAS E MANUTENÇÕES
+        ========================= */
+
+        .bottom-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+        }
+
+        .list-card {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 8px;
+
+            padding: 20px;
+        }
+
+        .list-title {
+            font-size: 18px;
+
+            padding-bottom: 15px;
+
+            border-bottom: 1px solid #e2e7ed;
+        }
+
+        .list-item {
+            min-height: 55px;
+
+            display: grid;
+
+            grid-template-columns:
+                30px 1fr 1fr auto;
+
+            align-items: center;
+
+            gap: 10px;
+
+            border-bottom: 1px solid #edf0f3;
+
+            font-size: 13px;
+        }
+
+        .alert-icon {
+            font-size: 18px;
+        }
+
+        .alert-red {
+            color: #e83232;
+        }
+
+        .alert-yellow {
+            color: #efa900;
+        }
+
+        .alert-blue {
+            color: #0868ed;
+        }
+
+        .date-small {
+            color: #667085;
+        }
+
+        .link {
+            display: block;
+
+            margin-top: 15px;
+
+            color: #0868ed;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           RODAPÉ
+        ========================= */
+
+        footer {
+            height: 55px;
+
+            background: white;
+
+            border-top: 1px solid #e1e5eb;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            color: #667085;
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           RESPONSIVO
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .charts,
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .donut-area {
+                flex-direction: column;
+            }
+
+            .list-item {
+                grid-template-columns:
+                    30px 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================
+         MENU LATERAL
+    ====================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                ⚙
+            </div>
+
+            <h2>
+                Gestão de Máquinas
+            </h2>
+
+        </div>
+
+
+        <nav class="menu">
+
+
+            <a href="#" class="active">
+                <span class="icon">⌂</span>
+                Dashboard
+            </a>
+
+
+            <a href="#">
+                <span class="icon">▣</span>
+                Máquinas
+            </a>
+
+
+            <a href="#">
+                <span class="icon">▥</span>
+                Produção
+            </a>
+
+
+            <a href="#">
+                <span class="icon">▤</span>
+                Relatórios
+            </a>
+
+
+            <a href="#">
+                <span class="icon">⚒</span>
+                Manutenções
+            </a>
+
+
+            <a href="#">
+                <span class="icon">♧</span>
+                Alertas
+            </a>
+
+
+            <a href="#">
+                <span class="icon">⚙</span>
+                Configurações
+            </a>
+
+
+        </nav>
+
+
+        <nav class="menu logout">
+
+            <a href="#">
+                <span class="icon">⇥</span>
+                Sair
+            </a>
+
+        </nav>
+
+
+    </aside>
+
+
+
+    <!-- =====================================
+         ÁREA PRINCIPAL
+    ====================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPO -->
+
+        <header class="topbar">
+
+            <div class="notification">
+
+                🔔
+
+                <span class="notification-number">
+                    3
+                </span>
+
+            </div>
+
+
+            <div class="profile">
+
+                <img
+                    src="https://i.pravatar.cc/100?img=12"
+                    alt="Administrador"
+                >
+
+                <span>
+                    Administrador
+                </span>
+
+                <span>
+                    ⌄
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTEÚDO -->
+
+        <section class="content">
+
+
+            <!-- BOAS-VINDAS -->
+
+            <div class="welcome">
+
+
+                <div>
+
+                    <h1>
+                        Olá, Administrador!
+                    </h1>
+
+                    <p>
+                        Bem-vindo ao sistema de gestão de máquinas.
+                    </p>
+
+                </div>
+
+
+                <div class="date">
+
+                    📅
+
+                    <span>
+                        13 de agosto de 2026
+                    </span>
+
+                    <span>
+                        ⌄
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 INDICADORES
+            ================================== -->
+
+            <div class="cards">
+
+
+                <!-- MÁQUINAS -->
+
+                <div class="card">
+
+                    <div class="card-top">
+
+                        <div class="card-icon blue">
+                            ⚙
+                        </div>
+
+                        <div>
+
+                            <div class="card-title">
+                                Máquinas Totais
+                            </div>
+
+                            <div class="card-number">
+                                28
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-description">
+                        100% do parque
+                    </div>
+
+                </div>
+
+
+
+                <!-- EM OPERAÇÃO -->
+
+                <div class="card">
+
+                    <div class="card-top">
+
+                        <div class="card-icon green">
+                            ▶
+                        </div>
+
+                        <div>
+
+                            <div class="card-title">
+                                Em Operação
+                            </div>
+
+                            <div class="card-number">
+                                18
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-description">
+                        64,3% das máquinas
+                    </div>
+
+                </div>
+
+
+
+                <!-- PARADAS -->
+
+                <div class="card">
+
+                    <div class="card-top">
+
+                        <div class="card-icon yellow">
+                            ⏸
+                        </div>
+
+                        <div>
+
+                            <div class="card-title">
+                                Paradas
+                            </div>
+
+                            <div class="card-number">
+                                6
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-description">
+                        21,4% das máquinas
+                    </div>
+
+                </div>
+
+
+
+                <!-- MANUTENÇÃO -->
+
+                <div class="card">
+
+                    <div class="card-top">
+
+                        <div class="card-icon red">
+                            !
+                        </div>
+
+                        <div>
+
+                            <div class="card-title">
+                                Em Manutenção
+                            </div>
+
+                            <div class="card-number">
+                                4
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-description">
+                        14,3% das máquinas
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 GRÁFICOS
+            ================================== -->
+
+            <div class="charts">
+
+
+                <!-- STATUS -->
+
+                <div class="chart-card">
+
+                    <h2 class="chart-title">
+                        Status das Máquinas
+                    </h2>
+
+
+                    <div class="donut-area">
+
+
+                        <div style="position: relative;">
+
+                            <div class="donut"></div>
+
+                            <div class="donut-center">
+
+                                <strong>
+                                    28
+                                </strong>
+
+                                <span>
+                                    Total
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="legend">
+
+
+                            <div class="legend-item">
+
+                                <span class="legend-dot dot-green"></span>
+
+                                <span>
+                                    Em Operação
+                                </span>
+
+                                <strong>
+                                    18
+                                </strong>
+
+                                <strong class="green-text">
+                                    64,3%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="legend-item">
+
+                                <span class="legend-dot dot-yellow"></span>
+
+                                <span>
+                                    Paradas
+                                </span>
+
+                                <strong>
+                                    6
+                                </strong>
+
+                                <strong class="yellow-text">
+                                    21,4%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="legend-item">
+
+                                <span class="legend-dot dot-red"></span>
+
+                                <span>
+                                    Em Manutenção
+                                </span>
+
+                                <strong>
+                                    4
+                                </strong>
+
+                                <strong class="red-text">
+                                    14,3%
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PRODUÇÃO -->
+
+                <div class="chart-card">
+
+                    <h2 class="chart-title">
+                        Produção de Hoje
+                    </h2>
+
+
+                    <div class="bar-chart">
+
+
+                        <div class="bar-container">
+
+                            <div class="bar bar-1"></div>
+
+                            <span class="bar-label">
+                                1º Turno
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-container">
+
+                            <div class="bar bar-2"></div>
+
+                            <span class="bar-label">
+                                2º Turno
+                            </span>
+
+                        </div>
+
+
+                        <div class="bar-container">
+
+                            <div class="bar bar-3"></div>
+
+                            <span class="bar-label">
+                                3º Turno
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="production-total">
+                        📦 Total produzido: 3.850 unidades
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 ALERTAS E MANUTENÇÕES
+            ================================== -->
+
+            <div class="bottom-grid">
+
+
+                <!-- ALERTAS -->
+
+                <div class="list-card">
+
+
+                    <h2 class="list-title">
+                        Últimos Alertas
+                    </h2>
+
+
+                    <div class="list-item">
+
+                        <span class="alert-icon alert-red">
+                            ⚠
+                        </span>
+
+                        <span>
+                            Manutenção vencida
+                        </span>
+
+                        <span>
+                            Prensa Hidráulica 03
+                        </span>
+
+                        <span class="date-small">
+                            Hoje, 08:15
+                        </span>
+
+                    </div>
+
+
+                    <div class="list-item">
+
+                        <span class="alert-icon alert-yellow">
+                            ⚠
+                        </span>
+
+                        <span>
+                            Temperatura elevada
+                        </span>
+
+                        <span>
+                            Torno CNC 02
+                        </span>
+
+                        <span class="date-small">
+                            Hoje, 07:42
+                        </span>
+
+                    </div>
+
+
+                    <div class="list-item">
+
+                        <span class="alert-icon alert-blue">
+                            ⓘ
+                        </span>
+
+                        <span>
+                            Baixa eficiência
+                        </span>
+
+                        <span>
+                            Fresa CNC 01
+                        </span>
+
+                        <span class="date-small">
+                            Hoje, 06:30
+                        </span>
+
+                    </div>
+
+
+                    <a href="#" class="link">
+                        Ver todos os alertas →
+                    </a>
+
+
+                </div>
+
+
+
+                <!-- MANUTENÇÕES -->
+
+                <div class="list-card">
+
+
+                    <h2 class="list-title">
+                        Manutenções Programadas
+                    </h2>
+
+
+                    <div class="list-item">
+
+                        <span class="alert-icon alert-blue">
+                            ▣
+                        </span>
+
+                        <span>
+                            Torno CNC 01
+                        </span>
+
+                        <span>
+                            Preventiva
+                        </span>
+
+                        <span>
+                            15/08/2026
+                        </span>
+
+                    </div>
+
+
+                    <div class="list-item">
+
+                        <span class="alert-icon alert-blue">
+                            ▣
+                        </span>
+
+                        <span>
+                            Fresa CNC 02
+                        </span>
+
+                        <span>
+                            Preventiva
+                        </span>
+
+                        <span>
+                            18/08/2026
+                        </span>
+
+                    </div>
+
+
+                    <div class="list-item">
+
+                        <span class="alert-icon alert-blue">
+                            ▣
+                        </span>
+
+                        <span>
+                            Prensa Hidráulica 02
+                        </span>
+
+                        <span>
+                            Corretiva
+                        </span>
+
+                        <span>
+                            20/08/2026
+                        </span>
+
+                    </div>
+
+
+                    <a href="#" class="link">
+                        Ver todas as manutenções →
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- RODAPÉ -->
+
+        <footer>
+
+            © 2026 Gestão de Máquinas.
+            Todos os direitos reservados.
+
+        </footer>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>
