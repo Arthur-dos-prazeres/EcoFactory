@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>README - Gestão de Máquinas</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #172b4d;
+        }
+
+        /* =========================
+           LAYOUT
+        ========================= */
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           MENU
+        ========================= */
+
+        .sidebar {
+            width: 260px;
+            background: #071c35;
+            color: white;
+            padding: 25px 15px;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 10px;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            background: white;
+            color: #071c35;
+
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 23px;
+        }
+
+        .logo h2 {
+            font-size: 17px;
+        }
+
+        .menu-title {
+            color: #aebed3;
+            font-size: 11px;
+            text-transform: uppercase;
+
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .menu a {
+            display: block;
+
+            color: white;
+            text-decoration: none;
+
+            padding: 11px 12px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            margin-bottom: 3px;
+        }
+
+        .menu a:hover {
+            background: #12375f;
+        }
+
+        .menu a.active {
+            background: #0868ed;
+        }
+
+        .links {
+            background: white;
+            color: #172b4d;
+
+            border-radius: 8px;
+
+            padding: 12px;
+
+            margin-top: 25px;
+        }
+
+        .links h3 {
+            color: #0868ed;
+            font-size: 13px;
+
+            margin-bottom: 10px;
+        }
+
+        .links a {
+            display: block;
+
+            color: #45546b;
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            padding: 6px 0;
+        }
+
+        .links a:hover {
+            color: #0868ed;
+        }
+
+        /* =========================
+           CONTEÚDO
+        ========================= */
+
+        .main {
+            margin-left: 260px;
+
+            width: calc(100% - 260px);
+
+            padding: 30px;
+        }
+
+        .header {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-icon {
+            width: 50px;
+            height: 50px;
+
+            background: #0868ed;
+            color: white;
+
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .technologies {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 8px 12px;
+
+            border-radius: 5px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .node {
+            background: #dff6e5;
+            color: #16833f;
+        }
+
+        .express {
+            background: #edf0f4;
+            color: #263238;
+        }
+
+        .postgres {
+            background: #dcecff;
+            color: #1760a8;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .card {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 10px;
+
+            padding: 22px;
+
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: #0868ed;
+
+            font-size: 19px;
+
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            color: #172b4d;
+
+            font-size: 15px;
+
+            margin: 18px 0 10px;
+        }
+
+        .card p {
+            color: #45546b;
+
+            line-height: 1.6;
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           SOBRE O PROJETO
+        ========================= */
+
+        .features {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+
+            margin-top: 20px;
+        }
+
+        .feature {
+            border: 1px solid #dce2e9;
+
+            background: #fafcff;
+
+            border-radius: 7px;
+
+            padding: 15px;
+
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            font-size: 11px;
+        }
+
+        /* =========================
+           DUAS COLUNAS
+        ========================= */
+
+        .grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1.5fr;
+
+            gap: 20px;
+        }
+
+        /* =========================
+           LISTAS
+        ========================= */
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            font-size: 13px;
+
+            color: #45546b;
+
+            margin-bottom: 9px;
+
+            line-height: 1.4;
+        }
+
+        /* =========================
+           CÓDIGO
+        ========================= */
+
+        .code {
+            background: #071c35;
+
+            color: #dbe9ff;
+
+            border-radius: 7px;
+
+            padding: 17px;
+
+            overflow-x: auto;
+
+            margin-top: 10px;
+        }
+
+        .code pre {
+            font-family: Consolas, monospace;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+
+            white-space: pre-wrap;
+        }
+
+        .comment {
+            color: #7bd99b;
+        }
+
+        .command {
+            color: #9dccff;
+        }
+
+        /* =========================
+           ALERTAS
+        ========================= */
+
+        .alert {
+            padding: 15px;
+
+            border-radius: 7px;
+
+            margin-top: 12px;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+        .alert.info {
+            background: #edf5ff;
+            border: 1px solid #b9d5ff;
+            color: #175ca8;
+        }
+
+        .alert.warning {
+            background: #fff8e6;
+            border: 1px solid #f0d58a;
+            color: #805d00;
+        }
+
+        .alert.success {
+            background: #edfff3;
+            border: 1px solid #b8e8c7;
+            color: #19733a;
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* =========================
+           VARIÁVEIS
+        ========================= */
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 12px;
+        }
+
+        th {
+            background: #edf4ff;
+
+            color: #0868ed;
+
+            text-align: left;
+
+            padding: 12px;
+
+            font-size: 12px;
+        }
+
+        td {
+            padding: 11px 12px;
+
+            border-bottom: 1px solid #e6eaf0;
+
+            font-size: 12px;
+
+            color: #45546b;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        code {
+            background: #f0f3f7;
+
+            color: #c7254e;
+
+            padding: 3px 5px;
+
+            border-radius: 4px;
+
+            font-family: Consolas, monospace;
+
+            font-size: 11px;
+        }
+
+        /* =========================
+           ESTRUTURA
+        ========================= */
+
+        .structure {
+            background: #071c35;
+
+            color: #dbe9ff;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            font-family: Consolas, monospace;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+
+            overflow-x: auto;
+        }
+
+        .folder {
+            color: #82b8ff;
+        }
+
+        .file {
+            color: #dbe9ff;
+        }
+
+        .structure-comment {
+            color: #76c893;
+        }
+
+        /* =========================
+           PROBLEMAS
+        ========================= */
+
+        .problem {
+            border: 1px solid #dce2e9;
+
+            border-radius: 7px;
+
+            margin-bottom: 10px;
+
+            overflow: hidden;
+        }
+
+        .problem-title {
+            background: #f7f9fc;
+
+            padding: 11px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .problem-solution {
+            padding: 11px;
+
+            color: #667085;
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           TECNOLOGIAS
+        ========================= */
+
+        .tech-list {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+        }
+
+        .tech-item {
+            padding: 12px;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            background: #fafcff;
+        }
+
+        /* =========================
+           RODAPÉ
+        ========================= */
+
+        footer {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #667085;
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           RESPONSIVO
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .technologies {
+                display: none;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+
+                padding: 15px;
+            }
+
+            .header {
+                display: block;
+            }
+
+            .header-left {
+                margin-bottom: 15px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-list {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================
+         MENU LATERAL
+    ====================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                ⚙
+            </div>
+
+            <h2>
+                Gestão de Máquinas
+            </h2>
+
+        </div>
+
+
+        <div class="menu">
+
+            <div class="menu-title">
+                Sumário
+            </div>
+
+            <a href="#projeto" class="active">
+                🏠 Sobre o Projeto
+            </a>
+
+            <a href="#requisitos">
+                ✓ Pré-requisitos
+            </a>
+
+            <a href="#instalacao">
+                ↓ Instalação
+            </a>
+
+            <a href="#configuracao">
+                ⚙ Configuração
+            </a>
+
+            <a href="#banco">
+                🗄 Banco de Dados
+            </a>
+
+            <a href="#execucao">
+                ▶ Execução
+            </a>
+
+            <a href="#testes">
+                🧪 Testes
+            </a>
+
+            <a href="#estrutura">
+                📁 Estrutura
+            </a>
+
+            <a href="#tecnologias">
+                &lt;/&gt; Tecnologias
+            </a>
+
+            <a href="#problemas">
+                ⚠ Solução de Problemas
+            </a>
+
+            <a href="#licenca">
+                📄 Licença
+            </a>
+
+        </div>
+
+
+        <div class="links">
+
+            <h3>
+                🔗 Links Úteis
+            </h3>
+
+            <a href="#">
+                📘 Documentação da API
+            </a>
+
+            <a href="#">
+                🔧 Coleção Postman
+            </a>
+
+            <a href="#">
+                🗄 Modelo do Banco
+            </a>
+
+            <a href="#">
+                📊 Diagrama da Arquitetura
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =====================================
+         CONTEÚDO
+    ====================================== -->
+
+    <main class="main">
+
+
+        <!-- CABEÇALHO -->
+
+        <header class="header">
+
+            <div class="header-left">
+
+                <div class="file-icon">
+                    📄
+                </div>
+
+                <div>
+
+                    <h1>
+                        README.md
+                    </h1>
+
+                    <p>
+                        Instruções de execução do projeto
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="technologies">
+
+                <span class="tag node">
+                    Node.js
+                </span>
+
+                <span class="tag express">
+                    Express
+                </span>
+
+                <span class="tag postgres">
+                    PostgreSQL
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =====================================
+             SOBRE
+        ====================================== -->
+
+        <section
+            class="card"
+            id="projeto"
+        >
+
+            <h2>
+                📌 Sobre o Projeto
+            </h2>
+
+            <p>
+                O <strong>Gestão de Máquinas</strong> é uma aplicação
+                web desenvolvida para realizar o controle de máquinas,
+                produção e manutenções de uma empresa.
+            </p>
+
+            <p style="margin-top:10px;">
+                O sistema possui uma interface moderna, integração
+                com uma API REST e persistência dos dados utilizando
+                PostgreSQL.
+            </p>
+
+
+            <div class="features">
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ⚙️
+                    </div>
+
+                    <p>
+                        Gestão de Máquinas
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📊
+                    </div>
+
+                    <p>
+                        Controle de Produção
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🔧
+                    </div>
+
+                    <p>
+                        Manutenções
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📈
+                    </div>
+
+                    <p>
+                        Relatórios
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             REQUISITOS + INSTALAÇÃO
+        ====================================== -->
+
+        <div class="grid">
+
+
+            <section
+                class="card"
+                id="requisitos"
+            >
+
+                <h2>
+                    🛠 Pré-requisitos
+                </h2>
+
+                <ul>
+
+                    <li>
+                        Node.js versão 18 ou superior
+                    </li>
+
+                    <li>
+                        npm versão 9 ou superior
+                    </li>
+
+                    <li>
+                        PostgreSQL versão 13 ou superior
+                    </li>
+
+                    <li>
+                        Git instalado
+                    </li>
+
+                    <li>
+                        Visual Studio Code recomendado
+                    </li>
+
+                </ul>
+
+
+                <div class="alert info">
+
+                    <strong>
+                        ℹ️ Antes de começar
+                    </strong>
+
+                    Certifique-se de que o Node.js e o PostgreSQL
+                    estão instalados corretamente no computador.
+
+                </div>
+
+            </section>
+
+
+
+            <section
+                class="card"
+                id="instalacao"
+            >
+
+                <h2>
+                    📥 Instalação
+                </h2>
+
+
+                <h3>
+                    1. Clone o projeto
+                </h3>
+
+
+                <div class="code">
+
+<pre>
+<span class="comment"># Clone o repositório</span>
+
+<span class="command">git clone https://github.com/seu-usuario/gestao-maquinas.git</span>
+
+<span class="command">cd gestao-maquinas</span>
+</pre>
+
+                </div>
+
+
+                <h3>
+                    2. Instale as dependências
+                </h3>
+
+
+                <div class="code">
+
+<pre>
+<span class="command">npm install</span>
+</pre>
+
+                </div>
+
+
+                <div class="alert success">
+
+                    <strong>
+                        ✓ Instalação concluída
+                    </strong>
+
+                    Depois da instalação, o projeto estará pronto
+                    para ser configurado.
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             CONFIGURAÇÃO
+        ====================================== -->
+
+        <section
+            class="card"
+            id="configuracao"
+        >
+
+            <h2>
+                ⚙️ Configuração
+            </h2>
+
+
+            <p>
+                Crie um arquivo chamado <code>.env</code> na raiz
+                do projeto para armazenar as configurações da aplicação.
+            </p>
+
+
+            <h3>
+                Criar arquivo .env
+            </h3>
+
+
+            <div class="code">
+
+<pre>
+<span class="comment"># Porta da aplicação</span>
+
+PORT=3000
+
+
+<span class="comment"># Configuração do PostgreSQL</span>
+
+DB_HOST=localhost
+
+DB_PORT=5432
+
+DB_NAME=gestao_maquinas
+
+DB_USER=postgres
+
+DB_PASSWORD=sua_senha
+
+
+<span class="comment"># Chave de autenticação</span>
+
+JWT_SECRET=sua_chave_secreta
+</pre>
+
+            </div>
+
+
+            <div class="alert warning">
+
+                <strong>
+                    ⚠️ Segurança
+                </strong>
+
+                Não compartilhe o arquivo <code>.env</code> publicamente
+                e não envie senhas ou chaves secretas para o GitHub.
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             BANCO
+        ====================================== -->
+
+        <section
+            class="card"
+            id="banco"
+        >
+
+            <h2>
+                🗄️ Banco de Dados PostgreSQL
+            </h2>
+
+
+            <h3>
+                1. Criar o banco de dados
+            </h3>
+
+
+            <div class="code">
+
+<pre>
+CREATE DATABASE gestao_maquinas;
+</pre>
+
+            </div>
+
+
+            <h3>
+                2. Executar as tabelas
+            </h3>
+
+
+            <p>
+                Execute o arquivo SQL responsável pela criação
+                das tabelas do sistema.
+            </p>
+
+
+            <div class="code">
+
+<pre>
+<span class="comment"># Exemplo</span>
+
+psql -U postgres -d gestao_maquinas
+
+<span class="comment"># Depois execute o arquivo schema.sql</span>
+
+\i database/schema.sql
+</pre>
+
+            </div>
+
+
+            <div class="alert info">
+
+                <strong>
+                    💡 Dica
+                </strong>
+
+                Verifique se o serviço do PostgreSQL está
+                executando antes de iniciar a aplicação.
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             EXECUÇÃO
+        ====================================== -->
+
+        <section
+            class="card"
+            id="execucao"
+        >
+
+            <h2>
+                ▶️ Execução do Projeto
+            </h2>
+
+
+            <div class="grid">
+
+
+                <div>
+
+                    <h3>
+                        Ambiente de Desenvolvimento
+                    </h3>
+
+                    <div class="code">
+
+<pre>
+<span class="comment"># Inicie o servidor</span>
+
+<span class="command">npm run dev</span>
+
+
+<span class="comment"># Acesse no navegador</span>
+
+http://localhost:3000
+</pre>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Ambiente de Produção
+                    </h3>
+
+                    <div class="code">
+
+<pre>
+<span class="comment"># Gere a aplicação</span>
+
+<span class="command">npm run build</span>
+
+
+<span class="comment"># Inicie o servidor</span>
+
+<span class="command">npm start</span>
+</pre>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="alert success">
+
+                <strong>
+                    ✓ Aplicação iniciada
+                </strong>
+
+                Se tudo estiver configurado corretamente,
+                o sistema poderá ser acessado através do endereço
+                configurado no servidor.
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             TESTES
+        ====================================== -->
+
+        <section
+            class="card"
+            id="testes"
+        >
+
+            <h2>
+                🧪 Testes
+            </h2>
+
+            <p>
+                Para executar os testes automatizados do projeto:
+            </p>
+
+
+            <div class="code">
+
+<pre>
+<span class="command">npm test</span>
+</pre>
+
+            </div>
+
+
+            <h3>
+                Testar a API
+            </h3>
+
+            <p>
+                Você também pode utilizar ferramentas como
+                Postman ou Insomnia para testar os endpoints
+                da API REST.
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================
+             ESTRUTURA
+        ====================================== -->
+
+        <section
+            class="card"
+            id="estrutura"
+        >
+
+            <h2>
+                📁 Estrutura do Projeto
+            </h2>
+
+
+            <div class="structure">
+
+<pre>
+<span class="folder">gestao-maquinas/</span>
+│
+├── <span class="folder">src/</span>
+│   ├── <span class="folder">config/</span>
+│   │   └── <span class="file">database.js</span>
+│   │
+│   ├── <span class="folder">controllers/</span>
+│   │   ├── <span class="file">maquinasController.js</span>
+│   │   └── <span class="file">producaoController.js</span>
+│   │
+│   ├── <span class="folder">models/</span>
+│   │   ├── <span class="file">Maquina.js</span>
+│   │   └── <span class="file">Producao.js</span>
+│   │
+│   ├── <span class="folder">routes/</span>
+│   │   ├── <span class="file">maquinas.js</span>
+│   │   └── <span class="file">producao.js</span>
+│   │
+│   └── <span class="file">app.js</span>
+│
+├── <span class="folder">public/</span>
+│   ├── <span class="file">index.html</span>
+│   ├── <span class="file">dashboard.html</span>
+│   └── <span class="file">producao.html</span>
+│
+├── <span class="folder">database/</span>
+│   └── <span class="file">schema.sql</span>
+│
+├── <span class="file">.env.example</span>
+├── <span class="file">.gitignore</span>
+├── <span class="file">package.json</span>
+└── <span class="file">README.md</span>
+</pre>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             TECNOLOGIAS
+        ====================================== -->
+
+        <section
+            class="card"
+            id="tecnologias"
+        >
+
+            <h2>
+                💻 Tecnologias Utilizadas
+            </h2>
+
+
+            <div class="tech-list">
+
+
+                <div class="tech-item">
+                    🟢 Node.js
+                </div>
+
+                <div class="tech-item">
+                    🟨 JavaScript
+                </div>
+
+                <div class="tech-item">
+                    ⚡ Express.js
+                </div>
+
+                <div class="tech-item">
+                    🌐 HTML / CSS
+                </div>
+
+                <div class="tech-item">
+                    🐘 PostgreSQL
+                </div>
+
+                <div class="tech-item">
+                    📊 Chart.js
+                </div>
+
+                <div class="tech-item">
+                    🗃️ Sequelize
+                </div>
+
+                <div class="tech-item">
+                    🔧 Git / GitHub
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             SOLUÇÃO DE PROBLEMAS
+        ====================================== -->
+
+        <section
+            class="card"
+            id="problemas"
+        >
+
+            <h2>
+                ⚠️ Solução de Problemas
+            </h2>
+
+
+            <div class="problem">
+
+                <div class="problem-title">
+                    Erro de conexão com o banco
+                </div>
+
+                <div class="problem-solution">
+
+                    Verifique as variáveis
+                    <code>DB_HOST</code>,
+                    <code>DB_PORT</code>,
+                    <code>DB_NAME</code>,
+                    <code>DB_USER</code> e
+                    <code>DB_PASSWORD</code>
+                    no arquivo <code>.env</code>.
+
+                </div>
+
+            </div>
+
+
+            <div class="problem">
+
+                <div class="problem-title">
+                    Porta já está em uso
+                </div>
+
+                <div class="problem-solution">
+
+                    Altere a variável <code>PORT</code>
+                    no arquivo <code>.env</code> ou encerre
+                    o processo que está utilizando a porta.
+
+                </div>
+
+            </div>
+
+
+            <div class="problem">
+
+                <div class="problem-title">
+                    Módulos não encontrados
+                </div>
+
+                <div class="problem-solution">
+
+                    Execute novamente:
+
+                    <div class="code">
+
+<pre>
+npm install
+</pre>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="problem">
+
+                <div class="problem-title">
+                    Banco de dados não encontrado
+                </div>
+
+                <div class="problem-solution">
+
+                    Verifique se o PostgreSQL está executando
+                    e se o banco <code>gestao_maquinas</code>
+                    foi criado.
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             LICENÇA
+        ====================================== -->
+
+        <section
+            class="card"
+            id="licenca"
+        >
+
+            <h2>
+                📄 Licença
+            </h2>
+
+            <p>
+                Este projeto está disponível sob a licença MIT.
+            </p>
+
+            <div class="alert info">
+
+                <strong>
+                    ℹ️ Projeto acadêmico
+                </strong>
+
+                Este sistema pode ser utilizado para fins
+                educacionais, acadêmicos e de demonstração.
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             CONTATO
+        ====================================== -->
+
+        <footer>
+
+            <span>
+                © 2026 Gestão de Máquinas
+            </span>
+
+            <span>
+                Documentação do Projeto
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

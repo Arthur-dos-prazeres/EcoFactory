@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Persistência de Dados - PostgreSQL</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #14233c;
+        }
+
+        /* =========================
+           ESTRUTURA
+        ========================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           MENU
+        ========================= */
+
+        .sidebar {
+            width: 270px;
+            min-height: 100vh;
+
+            background: #071c35;
+            color: white;
+
+            padding: 30px 14px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 0 10px;
+
+            margin-bottom: 45px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+
+            background: white;
+            color: #071c35;
+
+            border-radius: 8px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 22px;
+        }
+
+        .logo h2 {
+            font-size: 18px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .menu a {
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 0 15px;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        .menu a:hover {
+            background: #12375f;
+        }
+
+        .menu a.active {
+            background: #0868ed;
+        }
+
+        .icon {
+            width: 25px;
+            text-align: center;
+            font-size: 19px;
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        /* =========================
+           PRINCIPAL
+        ========================= */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* =========================
+           TOPO
+        ========================= */
+
+        .topbar {
+            height: 75px;
+
+            background: white;
+
+            border-bottom: 1px solid #e1e5eb;
+
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            gap: 25px;
+
+            padding: 0 28px;
+        }
+
+        .notification {
+            position: relative;
+
+            font-size: 23px;
+        }
+
+        .notification-number {
+            position: absolute;
+
+            top: -7px;
+            right: -7px;
+
+            width: 18px;
+            height: 18px;
+
+            border-radius: 50%;
+
+            background: #0868ed;
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 10px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            color: #45546b;
+        }
+
+        .profile img {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+        }
+
+        /* =========================
+           CONTEÚDO
+        ========================= */
+
+        .content {
+            padding: 30px;
+
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 29px;
+
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #667085;
+
+            margin-bottom: 25px;
+        }
+
+        /* =========================
+           ARQUITETURA
+        ========================= */
+
+        .architecture {
+            display: grid;
+
+            grid-template-columns:
+                1.4fr
+                1fr
+                1fr;
+
+            gap: 25px;
+
+            align-items: stretch;
+        }
+
+        .architecture-card {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 10px;
+
+            padding: 22px;
+
+            min-height: 470px;
+        }
+
+        .architecture-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .frontend-title {
+            color: #0868ed;
+        }
+
+        .service-title {
+            color: #159447;
+        }
+
+        .database-title {
+            color: #5132c7;
+        }
+
+        /* =========================
+           DASHBOARD MINIATURA
+        ========================= */
+
+        .mini-dashboard {
+            border: 1px solid #dce2e9;
+
+            border-radius: 7px;
+
+            overflow: hidden;
+
+            background: #f8fafc;
+        }
+
+        .mini-top {
+            height: 42px;
+
+            background: white;
+
+            border-bottom: 1px solid #e2e7ed;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 12px;
+
+            font-weight: bold;
+
+            font-size: 12px;
+        }
+
+        .mini-body {
+            display: flex;
+        }
+
+        .mini-menu {
+            width: 95px;
+
+            background: #071c35;
+
+            min-height: 370px;
+
+            padding-top: 15px;
+        }
+
+        .mini-menu div {
+            color: white;
+
+            padding: 9px;
+
+            font-size: 9px;
+        }
+
+        .mini-menu .selected {
+            background: #0868ed;
+        }
+
+        .mini-content {
+            flex: 1;
+
+            padding: 15px;
+        }
+
+        .mini-cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 8px;
+        }
+
+        .mini-card {
+            background: white;
+
+            border: 1px solid #e1e5eb;
+
+            border-radius: 5px;
+
+            padding: 10px;
+
+            min-height: 75px;
+        }
+
+        .mini-card strong {
+            display: block;
+
+            font-size: 18px;
+
+            margin-top: 5px;
+        }
+
+        .mini-card span {
+            color: #667085;
+
+            font-size: 9px;
+        }
+
+        .mini-chart {
+            height: 125px;
+
+            background: white;
+
+            border: 1px solid #e1e5eb;
+
+            border-radius: 5px;
+
+            margin-top: 10px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+        }
+
+        .bars {
+            height: 85px;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            gap: 12px;
+        }
+
+        .bar {
+            width: 20px;
+
+            background: #0868ed;
+
+            border-radius: 3px 3px 0 0;
+        }
+
+        .b1 {
+            height: 40px;
+        }
+
+        .b2 {
+            height: 70px;
+        }
+
+        .b3 {
+            height: 55px;
+        }
+
+        .mini-lists {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 8px;
+
+            margin-top: 10px;
+        }
+
+        .mini-list {
+            background: white;
+
+            border: 1px solid #e1e5eb;
+
+            border-radius: 5px;
+
+            padding: 9px;
+
+            min-height: 75px;
+        }
+
+        .mini-list p {
+            font-size: 9px;
+
+            margin-bottom: 7px;
+
+            color: #45546b;
+        }
+
+        .line {
+            height: 5px;
+
+            background: #e5e9ef;
+
+            border-radius: 4px;
+
+            margin-bottom: 6px;
+        }
+
+        /* =========================
+           API / SERVIÇO
+        ========================= */
+
+        .service-box {
+            border: 1px solid #b9dfc5;
+
+            background: #fbfffc;
+
+            border-radius: 8px;
+
+            padding: 18px;
+
+            margin-bottom: 15px;
+        }
+
+        .service-box h3 {
+            color: #159447;
+
+            font-size: 16px;
+
+            margin-bottom: 15px;
+        }
+
+        .endpoint {
+            padding: 8px 0;
+
+            font-size: 13px;
+
+            border-bottom: 1px solid #edf3ee;
+        }
+
+        .endpoint:last-child {
+            border-bottom: none;
+        }
+
+        .method {
+            display: inline-block;
+
+            min-width: 45px;
+
+            font-weight: bold;
+
+            color: #159447;
+        }
+
+        .service-list {
+            list-style: none;
+        }
+
+        .service-list li {
+            padding: 7px 0;
+
+            font-size: 13px;
+        }
+
+        .service-list li::before {
+            content: "•";
+
+            color: #159447;
+
+            font-weight: bold;
+
+            margin-right: 8px;
+        }
+
+        /* =========================
+           POSTGRESQL
+        ========================= */
+
+        .database {
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .postgres-logo {
+            width: 110px;
+            height: 110px;
+
+            border-radius: 50%;
+
+            background: #e7e8ff;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 48px;
+
+            margin: 10px auto 25px;
+        }
+
+        .database-cylinder {
+            width: 190px;
+
+            height: 155px;
+
+            position: relative;
+
+            margin-bottom: 25px;
+        }
+
+        .cylinder-body {
+            position: absolute;
+
+            left: 0;
+            right: 0;
+
+            top: 18px;
+            bottom: 18px;
+
+            background: #4e65ad;
+
+            border-left: 2px solid #34488c;
+            border-right: 2px solid #34488c;
+        }
+
+        .cylinder-top,
+        .cylinder-bottom {
+            position: absolute;
+
+            left: 0;
+
+            width: 190px;
+            height: 45px;
+
+            border-radius: 50%;
+
+            background: #8798cd;
+
+            border: 2px solid #34488c;
+        }
+
+        .cylinder-top {
+            top: 0;
+        }
+
+        .cylinder-bottom {
+            bottom: 0;
+
+            background: #5269ad;
+        }
+
+        .benefits {
+            width: 100%;
+        }
+
+        .benefit {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 9px 0;
+
+            font-size: 13px;
+        }
+
+        .check {
+            color: #159447;
+
+            font-weight: bold;
+        }
+
+        /* =========================
+           SETAS
+        ========================= */
+
+        .flow {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin: 18px 0;
+
+            gap: 12px;
+
+            color: #14233c;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 25px;
+
+            color: #0868ed;
+        }
+
+        /* =========================
+           MODELO DE DADOS
+        ========================= */
+
+        .section {
+            background: white;
+
+            border: 1px solid #dce2e9;
+
+            border-radius: 10px;
+
+            padding: 22px;
+
+            margin-top: 25px;
+        }
+
+        .section-title {
+            color: #0868ed;
+
+            font-size: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .tables {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+        }
+
+        .db-table {
+            border: 1px solid #b9ccef;
+
+            border-radius: 7px;
+
+            overflow: hidden;
+        }
+
+        .db-table-header {
+            padding: 12px;
+
+            background: #edf4ff;
+
+            color: #0868ed;
+
+            font-weight: bold;
+        }
+
+        .db-table ul {
+            list-style: none;
+
+            padding: 12px;
+        }
+
+        .db-table li {
+            padding: 6px 0;
+
+            border-bottom: 1px solid #edf0f3;
+
+            font-size: 12px;
+
+            display: flex;
+
+            justify-content: space-between;
+        }
+
+        .db-table li:last-child {
+            border-bottom: none;
+        }
+
+        .type {
+            color: #667085;
+        }
+
+        /* =========================
+           BENEFÍCIOS
+        ========================= */
+
+        .benefits-section {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+        }
+
+        .benefit-big {
+            padding: 14px;
+
+            border-bottom: 1px solid #edf0f3;
+
+            font-size: 14px;
+        }
+
+        .benefit-big:last-child {
+            border-bottom: none;
+        }
+
+        /* =========================
+           FLUXO
+        ========================= */
+
+        .flow-section {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            overflow-x: auto;
+        }
+
+        .flow-step {
+            min-width: 175px;
+
+            border: 1px solid #cddbf2;
+
+            border-radius: 8px;
+
+            padding: 15px;
+
+            text-align: center;
+
+            background: #fafcff;
+        }
+
+        .flow-step-number {
+            color: #0868ed;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+        }
+
+        .flow-arrow {
+            font-size: 25px;
+
+            color: #0868ed;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            height: 55px;
+
+            background: white;
+
+            border-top: 1px solid #e1e5eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: #667085;
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           RESPONSIVO
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .architecture {
+                grid-template-columns: 1fr;
+            }
+
+            .tables {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .tables {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-section {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-section {
+                justify-content: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================
+         MENU LATERAL
+    ====================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                ⚙
+            </div>
+
+            <h2>
+                Gestão de Máquinas
+            </h2>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="/Dashboard.html">
+                <span class="icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="#">
+                <span class="icon">▣</span>
+                Máquinas
+            </a>
+
+            <a href="/producao.html">
+                <span class="icon">▥</span>
+                Produção
+            </a>
+
+            <a href="#">
+                <span class="icon">▤</span>
+                Relatórios
+            </a>
+
+            <a href="#">
+                <span class="icon">⚒</span>
+                Manutenções
+            </a>
+
+            <a href="#">
+                <span class="icon">♧</span>
+                Alertas
+            </a>
+
+            <a href="#" class="active">
+                <span class="icon">🗄</span>
+                Banco de Dados
+            </a>
+
+        </nav>
+
+
+        <nav class="menu logout">
+
+            <a href="#">
+                <span class="icon">⇥</span>
+                Sair
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- =====================================
+         PRINCIPAL
+    ====================================== -->
+
+    <main class="main">
+
+
+        <header class="topbar">
+
+            <div class="notification">
+
+                🔔
+
+                <span class="notification-number">
+                    3
+                </span>
+
+            </div>
+
+
+            <div class="profile">
+
+                <img
+                    src="https://i.pravatar.cc/100?img=12"
+                    alt="Administrador"
+                >
+
+                <span>
+                    Administrador
+                </span>
+
+                <span>
+                    ⌄
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================
+             CONTEÚDO
+        ================================== -->
+
+        <section class="content">
+
+
+            <h1 class="page-title">
+                Persistência de dados no PostgreSQL
+            </h1>
+
+            <p class="subtitle">
+                Arquitetura de aplicação com persistência de dados
+            </p>
+
+
+
+            <!-- =================================
+                 ARQUITETURA
+            ================================== -->
+
+            <div class="architecture">
+
+
+                <!-- FRONTEND -->
+
+                <div class="architecture-card">
+
+                    <h2 class="architecture-title frontend-title">
+                        🖥️ Frontend (Navegador)
+                    </h2>
+
+
+                    <div class="mini-dashboard">
+
+                        <div class="mini-top">
+                            Gestão de Máquinas — Dashboard
+                        </div>
+
+
+                        <div class="mini-body">
+
+
+                            <div class="mini-menu">
+
+                                <div class="selected">
+                                    Dashboard
+                                </div>
+
+                                <div>
+                                    Máquinas
+                                </div>
+
+                                <div>
+                                    Produção
+                                </div>
+
+                                <div>
+                                    Relatórios
+                                </div>
+
+                                <div>
+                                    Manutenções
+                                </div>
+
+                                <div>
+                                    Alertas
+                                </div>
+
+                                <div>
+                                    Configurações
+                                </div>
+
+                            </div>
+
+
+                            <div class="mini-content">
+
+
+                                <div class="mini-cards">
+
+                                    <div class="mini-card">
+                                        <span>
+                                            Máquinas Totais
+                                        </span>
+
+                                        <strong>
+                                            28
+                                        </strong>
+                                    </div>
+
+                                    <div class="mini-card">
+                                        <span>
+                                            Em Operação
+                                        </span>
+
+                                        <strong>
+                                            18
+                                        </strong>
+                                    </div>
+
+                                    <div class="mini-card">
+                                        <span>
+                                            Paradas
+                                        </span>
+
+                                        <strong>
+                                            6
+                                        </strong>
+                                    </div>
+
+                                    <div class="mini-card">
+                                        <span>
+                                            Manutenção
+                                        </span>
+
+                                        <strong>
+                                            4
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mini-chart">
+
+                                    <div class="bars">
+
+                                        <div class="bar b1"></div>
+
+                                        <div class="bar b2"></div>
+
+                                        <div class="bar b3"></div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mini-lists">
+
+                                    <div class="mini-list">
+
+                                        <p>
+                                            Últimos alertas
+                                        </p>
+
+                                        <div class="line"></div>
+
+                                        <div class="line"></div>
+
+                                        <div class="line"></div>
+
+                                    </div>
+
+
+                                    <div class="mini-list">
+
+                                        <p>
+                                            Manutenções
+                                        </p>
+
+                                        <div class="line"></div>
+
+                                        <div class="line"></div>
+
+                                        <div class="line"></div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flow">
+
+                        <span>
+                            Requisição
+                        </span>
+
+                        <span class="arrow">
+                            →
+                        </span>
+
+                        <span>
+                            HTTP / JSON
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CAMADA DE SERVIÇO -->
+
+                <div class="architecture-card">
+
+                    <h2 class="architecture-title service-title">
+                        ☁️ Camada de Serviço
+                    </h2>
+
+
+                    <div class="service-box">
+
+                        <h3>
+                            API REST
+                        </h3>
+
+
+                        <!-- SOMENTE GET E DELETE -->
+
+                        <div class="endpoint">
+
+                            <span class="method">
+                                GET
+                            </span>
+
+                            /api/maquinas
+
+                        </div>
+
+
+                        <div class="endpoint">
+
+                            <span class="method">
+                                GET
+                            </span>
+
+                            /api/producao
+
+                        </div>
+
+
+                        <div class="endpoint">
+
+                            <span class="method">
+                                GET
+                            </span>
+
+                            /api/manutencoes
+
+                        </div>
+
+
+                        <div class="endpoint">
+
+                            <span class="method">
+                                DELETE
+                            </span>
+
+                            /api/maquinas/{id}
+
+                        </div>
+
+
+                        <div class="endpoint">
+
+                            <span class="method">
+                                GET
+                            </span>
+
+                            /api/relatorios
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="service-box">
+
+                        <h3>
+                            Regras de Negócio
+                        </h3>
+
+                        <ul class="service-list">
+
+                            <li>
+                                Validações
+                            </li>
+
+                            <li>
+                                Consultas
+                            </li>
+
+                            <li>
+                                Segurança
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <div class="service-box">
+
+                        <h3>
+                            Camada de Acesso a Dados
+                        </h3>
+
+                        <ul class="service-list">
+
+                            <li>
+                                Repository / DAO
+                            </li>
+
+                            <li>
+                                Spring Data JPA / JDBC
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="flow">
+
+                        <span>
+                            Resposta JSON
+                        </span>
+
+                        <span class="arrow">
+                            ←
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- POSTGRESQL -->
+
+                <div class="architecture-card database">
+
+                    <h2 class="architecture-title database-title">
+                        🐘 PostgreSQL
+                    </h2>
+
+
+                    <div class="database-cylinder">
+
+                        <div class="cylinder-body"></div>
+
+                        <div class="cylinder-top"></div>
+
+                        <div class="cylinder-bottom"></div>
+
+                    </div>
+
+
+                    <div class="benefits">
+
+                        <div class="benefit">
+
+                            <span class="check">
+                                ✓
+                            </span>
+
+                            ACID e integridade dos dados
+
+                        </div>
+
+
+                        <div class="benefit">
+
+                            <span class="check">
+                                ✓
+                            </span>
+
+                            Confiabilidade
+
+                        </div>
+
+
+                        <div class="benefit">
+
+                            <span class="check">
+                                ✓
+                            </span>
+
+                            Alto desempenho
+
+                        </div>
+
+
+                        <div class="benefit">
+
+                            <span class="check">
+                                ✓
+                            </span>
+
+                            Escalabilidade
+
+                        </div>
+
+
+                        <div class="benefit">
+
+                            <span class="check">
+                                ✓
+                            </span>
+
+                            Open Source
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flow">
+
+                        <span class="arrow">
+                            ←
+                        </span>
+
+                        <span>
+                            Resultados
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 MODELO DE DADOS
+            ================================== -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+                    Modelo de Dados — Principais Tabelas
+                </h2>
+
+
+                <div class="tables">
+
+
+                    <!-- MAQUINAS -->
+
+                    <div class="db-table">
+
+                        <div class="db-table-header">
+                            máquinas
+                        </div>
+
+                        <ul>
+
+                            <li>
+                                <strong>id</strong>
+                                <span class="type">SERIAL PK</span>
+                            </li>
+
+                            <li>
+                                nome
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                codigo
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                tipo
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                status
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                data_cadastro
+                                <span class="type">TIMESTAMP</span>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- PRODUCAO -->
+
+                    <div class="db-table">
+
+                        <div class="db-table-header">
+                            producao
+                        </div>
+
+                        <ul>
+
+                            <li>
+                                <strong>id</strong>
+                                <span class="type">SERIAL PK</span>
+                            </li>
+
+                            <li>
+                                maquina_id
+                                <span class="type">INT FK</span>
+                            </li>
+
+                            <li>
+                                produto
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                quantidade
+                                <span class="type">NUMERIC</span>
+                            </li>
+
+                            <li>
+                                quantidade_rejeitada
+                                <span class="type">NUMERIC</span>
+                            </li>
+
+                            <li>
+                                turno
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                data_producao
+                                <span class="type">DATE</span>
+                            </li>
+
+                            <li>
+                                operador
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- MANUTENCOES -->
+
+                    <div class="db-table">
+
+                        <div class="db-table-header">
+                            manutencoes
+                        </div>
+
+                        <ul>
+
+                            <li>
+                                <strong>id</strong>
+                                <span class="type">SERIAL PK</span>
+                            </li>
+
+                            <li>
+                                maquina_id
+                                <span class="type">INT FK</span>
+                            </li>
+
+                            <li>
+                                tipo
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                descricao
+                                <span class="type">TEXT</span>
+                            </li>
+
+                            <li>
+                                data_programada
+                                <span class="type">DATE</span>
+                            </li>
+
+                            <li>
+                                data_realizada
+                                <span class="type">DATE</span>
+                            </li>
+
+                            <li>
+                                status
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+
+                    <!-- USUARIOS -->
+
+                    <div class="db-table">
+
+                        <div class="db-table-header">
+                            usuarios
+                        </div>
+
+                        <ul>
+
+                            <li>
+                                <strong>id</strong>
+                                <span class="type">SERIAL PK</span>
+                            </li>
+
+                            <li>
+                                nome
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                email
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                senha
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                perfil
+                                <span class="type">VARCHAR</span>
+                            </li>
+
+                            <li>
+                                ativo
+                                <span class="type">BOOLEAN</span>
+                            </li>
+
+                            <li>
+                                data_criacao
+                                <span class="type">TIMESTAMP</span>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================
+                 BENEFÍCIOS
+            ================================== -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+                    Benefícios da Persistência no PostgreSQL
+                </h2>
+
+
+                <div class="benefits-section">
+
+
+                    <div>
+
+                        <div class="benefit-big">
+                            ✓ Integridade e consistência dos dados
+                        </div>
+
+                        <div class="benefit-big">
+                            ✓ Consultas complexas e relacionamentos
+                        </div>
+
+                        <div class="benefit-big">
+                            ✓ Alta performance e concorrência
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="benefit-big">
+                            ✓ Backup e recuperação confiáveis
+                        </div>
+
+                        <div class="benefit-big">
+                            ✓ Escalabilidade para grandes volumes
+                        </div>
+
+                        <div class="benefit-big">
+                            ✓ Banco de dados open source
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================
+                 FLUXO
+            ================================== -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+                    Fluxo de Persistência
+                </h2>
+
+
+                <div class="flow-section">
+
+
+                    <div class="flow-step">
+
+                        <div class="flow-step-number">
+                            1.
+                        </div>
+
+                        Usuário interage
+                        com a aplicação
+
+                    </div>
+
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+
+                    <div class="flow-step">
+
+                        <div class="flow-step-number">
+                            2.
+                        </div>
+
+                        Frontend envia
+                        requisição HTTP/JSON
+
+                    </div>
+
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+
+                    <div class="flow-step">
+
+                        <div class="flow-step-number">
+                            3.
+                        </div>
+
+                        API processa
+                        a requisição
+
+                    </div>
+
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+
+                    <div class="flow-step">
+
+                        <div class="flow-step-number">
+                            4.
+                        </div>
+
+                        Dados são consultados
+                        no PostgreSQL
+
+                    </div>
+
+
+                    <div class="flow-arrow">
+                        →
+                    </div>
+
+
+                    <div class="flow-step">
+
+                        <div class="flow-step-number">
+                            5.
+                        </div>
+
+                        Resposta é enviada
+                        ao Frontend
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </section>
+
+
+
+        <footer>
+
+            © 2026 Gestão de Máquinas.
+            Todos os direitos reservados.
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

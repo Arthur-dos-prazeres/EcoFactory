@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta de Máquinas - EcoFactor</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172b4d}.app{display:flex;min-height:100vh}.sidebar{width:230px;background:#071c35;color:#fff;padding:24px 14px}.logo{font-size:18px;font-weight:700;margin:0 8px 28px}.menu a{display:block;color:#fff;text-decoration:none;padding:12px;border-radius:6px;margin-bottom:4px}.menu a:hover,.menu .active{background:#0868ed}.main{flex:1;padding:30px}.top{background:#fff;border:1px solid #dce2e9;border-radius:10px;padding:22px;margin-bottom:20px}.top h1{margin:0 0 6px}.top p{margin:0;color:#667085}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.toolbar input,.toolbar select{padding:11px;border:1px solid #ccd4df;border-radius:6px}.btn{border:0;border-radius:6px;padding:11px 16px;background:#0868ed;color:#fff;cursor:pointer}.card{background:#fff;border:1px solid #dce2e9;border-radius:10px;padding:20px;overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid #e7ebf0;text-align:left;font-size:13px}th{background:#f5f8fc;color:#0868ed}.status{font-weight:700}.actions button{margin-right:5px;padding:7px 10px;border:0;border-radius:5px;cursor:pointer}.edit{background:#e7f0ff;color:#0868ed}.delete{background:#ffe9e9;color:#b42318}.msg{margin:12px 0;padding:10px;border-radius:6px;display:none}.ok{display:block;background:#eaf8ef;color:#19733a}.err{display:block;background:#fff0f0;color:#b42318}@media(max-width:700px){.sidebar{display:none}.main{padding:15px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar"><div class="logo">⚙ EcoFactor</div><nav class="menu"><a href="/">⌂ Dashboard</a><a href="/cadastro.html">▣ Cadastrar máquina</a><a class="active" href="/consulta.html">☷ Consultar máquinas</a><a href="/Integracao-API.html">🔗 Integração API</a><a href="/Persistencia-PostgreSQL.html">🗄 PostgreSQL</a><a href="/Validacao-formularios.html">✓ Validações</a></nav></aside>
+<main class="main">
+<section class="top"><h1>Consulta de Máquinas</h1><p>Dados carregados diretamente do PostgreSQL por meio da API REST.</p><div class="toolbar"><input id="busca" placeholder="Buscar por nome ou setor"><select id="filtro"><option value="">Todos os status</option><option>Em operação</option><option>Em manutenção</option><option>Parada</option><option>Desativada</option></select><button class="btn" onclick="carregar()">Atualizar</button><a class="btn" href="/cadastro.html" style="text-decoration:none">+ Nova máquina</a></div></section>
+<div id="msg" class="msg"></div>
+<section class="card"><table><thead><tr><th>ID</th><th>Máquina</th><th>Setor</th><th>Tipo</th><th>Status</th><th>Consumo</th><th>Temperatura</th><th>Ações</th></tr></thead><tbody id="lista"></tbody></table></section>
+</main></div>
+<script>
+let maquinas=[];
+async function carregar(){try{const r=await fetch('/api/maquinas');const d=await r.json();if(!r.ok)throw Error(d.erro||'Erro');maquinas=d;render();mostrar('Dados atualizados.','ok')}catch(e){mostrar('Não foi possível acessar a API: '+e.message,'err')}}
+function render(){const busca=document.getElementById('busca').value.toLowerCase();const filtro=document.getElementById('filtro').value;const dados=maquinas.filter(m=>(!busca||m.nome.toLowerCase().includes(busca)||m.setor.toLowerCase().includes(busca))&&(!filtro||m.status===filtro));document.getElementById('lista').innerHTML=dados.map(m=>`<tr><td>${m.id}</td><td><strong>${esc(m.nome)}</strong></td><td>${esc(m.setor)}</td><td>${esc(m.tipo)}</td><td class="status">${esc(m.status)}</td><td>${m.consumo_medio_energia} kWh</td><td>${m.temperatura_atual} °C</td><td class="actions"><button class="delete" onclick="excluir(${m.id})">Excluir</button></td></tr>`).join('')||'<tr><td colspan="8">Nenhuma máquina encontrada.</td></tr>'}
+async function excluir(id){if(!confirm('Excluir esta máquina?'))return;try{const r=await fetch('/api/maquinas/'+id,{method:'DELETE'});const d=await r.json();if(!r.ok)throw Error(d.erro||'Erro');await carregar();mostrar('Máquina excluída.','ok')}catch(e){mostrar(e.message,'err')}}
+function mostrar(t,c){const x=document.getElementById('msg');x.textContent=t;x.className='msg '+c}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);document.addEventListener('DOMContentLoaded',carregar);
+</script>
+</body></html>
